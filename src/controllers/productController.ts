@@ -18,8 +18,12 @@ class ProductController {
     try {
       const { rows, totalCount } = await ProductService.getProducts(params);
 
-      res.setHeader('Access-Control-Expose-Headers', '*, Authorization');
+      res.setHeader(
+        'Access-Control-Expose-Headers',
+        'X-Total-Count, Authorization, Content-Encoding'
+      );
       res.setHeader('X-Total-Count', totalCount);
+      res.setHeader('Content-Length', totalCount);
 
       return res.status(200).json(rows);
     } catch (err) {
