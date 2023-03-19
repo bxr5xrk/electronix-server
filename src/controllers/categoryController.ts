@@ -6,7 +6,7 @@ class CategoryController {
     try {
       const categories = await categoryService.getCategory();
 
-      return res.status(200).json({ categories });
+      return res.status(200).json(categories);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Server error' });

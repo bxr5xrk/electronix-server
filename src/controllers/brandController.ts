@@ -6,7 +6,7 @@ class BrandController {
     try {
       const brands = await BrandService.getBrands();
 
-      return res.status(200).json({ brands });
+      return res.status(200).json(brands);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Server error' });
