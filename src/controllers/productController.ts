@@ -2,10 +2,25 @@ import { Request, Response } from 'express';
 import ProductService from '../service/productService';
 
 class ProductController {
-  getProducts = async (_: Request, res: Response): Promise<Response> => {
+  getProducts = async (req: Request, res: Response): Promise<Response> => {
+    const { brand, category, price_gte, price_lte, page, limit, q } = req.query;
+
+    const params = {
+      q: q as string,
+      brand: brand as string | string[],
+      category: category as string | string[],
+      price_gte: Number(price_gte),
+      price_lte: Number(price_lte),
+      page: Number(page),
+      limit: Number(limit),
+    };
+
     try {
-      const result = await ProductService.getProducts();
-      return res.status(200).json(result);
+      const { rows, totalCount } = await ProductService.getProducts(params);
+
+      res.setHeader('X-Total-Count', totalCount);
+
+      return res.status(200).json(rows);
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: 'Internal server error' });
