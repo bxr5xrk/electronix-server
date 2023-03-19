@@ -1,7 +1,7 @@
-import { findBrandIdByName } from '../controllers/brandController';
-import { findCategoryIdByName } from '../controllers/categoryController';
 import { query } from '../db';
 import { Product } from '../db/models/product';
+import brandService from './brandService';
+import categoryService from './categoryService';
 
 interface Params {
   q?: string;
@@ -113,8 +113,8 @@ class ProductService {
     category: string
   ): Promise<Product> => {
     try {
-      const brandId = await findBrandIdByName(brand);
-      const categoryId = await findCategoryIdByName(category);
+      const brandId = await brandService.findBrandIdByName(brand);
+      const categoryId = await categoryService.findCategoryIdByName(category);
       const result = await query<Product>(
         'INSERT INTO product (title, images, rating, price, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, title, images, rating, price, brand_id, category_id',
         [title, images, rating, price, brandId, categoryId]
@@ -141,8 +141,8 @@ class ProductService {
     brandName: string,
     categoryName: string
   ): Promise<Product> => {
-    const brandId = await findBrandIdByName(brandName);
-    const categoryId = await findCategoryIdByName(categoryName);
+    const brandId = await brandService.findBrandIdByName(brandName);
+    const categoryId = await categoryService.findCategoryIdByName(categoryName);
     const result = await query<Product>(
       'UPDATE product SET title = $1, images = $2, rating = $3, price = $4, brand_id = $5, category_id = $6 WHERE id = $7 RETURNING *',
       [title, images, rating, price, brandId, categoryId, id]
