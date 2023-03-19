@@ -18,6 +18,7 @@ class ProductController {
     try {
       const { rows, totalCount } = await ProductService.getProducts(params);
 
+      res.setHeader('Access-Control-Expose-Headers', '*, Authorization');
       res.setHeader('X-Total-Count', totalCount);
 
       return res.status(200).json(rows);
