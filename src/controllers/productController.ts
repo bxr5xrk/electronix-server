@@ -19,15 +19,9 @@ class ProductController {
       const { rows, totalCount } = await ProductService.getProducts(params);
 
       res.setHeader('access-control-expose-headers', 'X-Total-Count');
-      res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('access-control-allow-credentials', 'true');
-      // res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-      // res.setHeader(
-      //   'Access-Control-Expose-Headers',
-      //   'X-Total-Count, Authorization, Content-Encoding'
-      // );
+
       res.setHeader('X-Total-Count', totalCount);
-      res.setHeader('Content-Length', totalCount);
 
       return res.status(200).json(rows);
     } catch (err) {

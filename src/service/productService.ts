@@ -73,11 +73,19 @@ class ProductService {
         queryString += ` LIMIT ${limitValue} OFFSET ${offset}`;
       }
 
-      const result = await query<Product>(queryString, values);
+      const [result, count] = await Promise.all([
+        query<Product>(queryString, values),
+        query<{ total_count: number }>(
+          `SELECT COUNT(p.id) AS total_count 
+          FROM product p 
+          JOIN brand b ON p.brand_id = b.id 
+          JOIN category c ON p.category_id = c.id
+          ${filters.length ? ' WHERE ' + filters.join(' AND ') : ''}`,
+          values
+        ),
+      ]);
 
-      const totalCount = result.rowCount;
-
-      return { rows: result.rows, totalCount };
+      return { rows: result.rows, totalCount: count.rows[0].total_count };
     } catch (err) {
       console.error(err);
       throw new Error('Internal server error');
