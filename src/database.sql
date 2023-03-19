@@ -1,0 +1,31 @@
+CREATE TABLE brand (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE category (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE
+);
+
+
+CREATE TABLE product (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  images JSON NOT NULL,
+  rating DECIMAL(4,2) NOT NULL,
+  price INT NOT NULL,
+
+  brand_id INT NOT NULL,
+  category_id INT NOT NULL,
+  FOREIGN KEY (brand_id) REFERENCES brand(id),
+  FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+CREATE TABLE user (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  role VARCHAR(50) NOT NULL
+);
