@@ -8,7 +8,14 @@ export const app: Application = express();
 
 app.use(urlencoded({ extended: true }));
 app.use(json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'https://e-commerce-beryl-zeta.vercel.app/',
+    ],
+  })
+);
 
 app.use('/', router);
 

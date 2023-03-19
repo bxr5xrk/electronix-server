@@ -18,10 +18,11 @@ class ProductController {
     try {
       const { rows, totalCount } = await ProductService.getProducts(params);
 
-      res.setHeader(
-        'Access-Control-Expose-Headers',
-        'X-Total-Count, Authorization, Content-Encoding'
-      );
+      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+      // res.setHeader(
+      //   'Access-Control-Expose-Headers',
+      //   'X-Total-Count, Authorization, Content-Encoding'
+      // );
       res.setHeader('X-Total-Count', totalCount);
       res.setHeader('Content-Length', totalCount);
 
