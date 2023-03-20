@@ -22,11 +22,12 @@ class ProductService {
 
       const filters = [];
       const values = [];
+      let orderNumber = 0;
 
       if (brand) {
         const brands = Array.isArray(brand) ? brand : [brand];
         filters.push(
-          `b.name IN (${brands.map((_, i) => `$${i + 1}`).join(', ')})`
+          `b.name IN (${brands.map((_, i) => `$${orderNumber += 1}`).join(', ')})`
         );
         values.push(...brands);
       }
@@ -34,7 +35,7 @@ class ProductService {
       if (category) {
         const categories = Array.isArray(category) ? category : [category];
         filters.push(
-          `c.name IN (${categories.map((_, i) => `$${i + 1}`).join(', ')})`
+          `c.name IN (${categories.map((_, i) => `$${orderNumber += 1}`).join(', ')})`
         );
         values.push(...categories);
       }
@@ -72,6 +73,8 @@ class ProductService {
 
         queryString += ` LIMIT ${limitValue} OFFSET ${offset}`;
       }
+
+      console.log(queryString);
 
       const [result, count] = await Promise.all([
         query<Product>(queryString, values),
