@@ -11,7 +11,8 @@ class UserController {
       const user = await UserService.createUser(name, email, password);
       const token = jwt.sign(
         { userId: user.id, role: user.role },
-        config.JWT_SECRET
+        config.JWT_SECRET,
+        { expiresIn: '30d' }
       );
 
       return res

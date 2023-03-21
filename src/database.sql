@@ -22,7 +22,7 @@ CREATE TABLE product (
   FOREIGN KEY (category_id) REFERENCES category(id)
 );
 
-CREATE TABLE user (
+CREATE TABLE "user" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
