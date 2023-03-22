@@ -27,18 +27,3 @@ class BrandController {
 }
 
 export default new BrandController();
-
-// export const findBrandIdByName = async (
-//   name: string
-// ): Promise<null | number> => {
-//   try {
-//     const result = await query<Brand>('SELECT id FROM brand WHERE name = $1', [
-//       name,
-//     ]);
-//     const brand = result.rows[0];
-//     return brand ? brand.id : null;
-//   } catch (err) {
-//     console.error(err);
-//     throw new Error('Internal server error');
-//   }
-// };

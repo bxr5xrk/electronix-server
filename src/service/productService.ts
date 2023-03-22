@@ -78,8 +78,6 @@ class ProductService {
         queryString += ` LIMIT ${limitValue} OFFSET ${offset}`;
       }
 
-      console.log(queryString);
-
       const [result, count] = await Promise.all([
         query<Product>(queryString, values),
         query<{ total_count: number }>(

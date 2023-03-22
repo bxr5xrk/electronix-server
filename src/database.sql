@@ -29,3 +29,19 @@ CREATE TABLE "user" (
   password VARCHAR(255) NOT NULL,
   role VARCHAR(50) NOT NULL
 );
+
+CREATE TABLE custom (
+  id SERIAL PRIMARY KEY,
+  datetime TIMESTAMP NOT NULL DEFAULT NOW(),
+  totalPrice INT NOT NULL,
+
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES "user"(id)
+);
+
+CREATE TABLE custom_product (
+  custom_id INT NOT NULL,
+  product_id INT NOT NULL,
+  FOREIGN KEY (custom_id) REFERENCES custom(id),
+  FOREIGN KEY (product_id) REFERENCES product(id)
+);
