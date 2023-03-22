@@ -6,15 +6,24 @@ class CustomService {
   createCustomProduct = async ({
     userId,
     productIds,
+    address,
+    city,
   }: {
     userId: number;
     productIds: number[];
+    address: string;
+    city: string;
   }): Promise<Custom> => {
     const pricesWithIds = await this.getProductsByIds(productIds);
 
     const totalPrice = calculateTotalPrice(pricesWithIds, productIds);
 
-    const custom = await this.createCustom({ userId, totalPrice });
+    const custom = await this.createCustom({
+      userId,
+      totalPrice,
+      address,
+      city,
+    });
 
     for (const id of productIds) {
       await this.addCustomProduct({ custom_id: custom.id, product_id: id });
@@ -26,13 +35,17 @@ class CustomService {
   createCustom = async ({
     totalPrice,
     userId,
+    address,
+    city,
   }: {
     totalPrice: number;
     userId: number;
+    address: string;
+    city: string;
   }): Promise<Custom> => {
     const custom = await query<Custom>(
-      'INSERT INTO custom (user_id, totalPrice) VALUES ($1, $2) RETURNING *',
-      [userId, totalPrice]
+      'INSERT INTO custom (user_id, totalPrice, address, city) VALUES ($1, $2, $3, $4) RETURNING *',
+      [userId, totalPrice, address, city]
     );
 
     return custom.rows[0];
@@ -62,6 +75,8 @@ class CustomService {
     custom.id,
     custom.datetime,
     custom.totalPrice,
+    custom.address,
+    custom.city,
     JSON_AGG(
       JSON_BUILD_OBJECT(
         'id', product.id,

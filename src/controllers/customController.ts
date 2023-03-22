@@ -3,7 +3,7 @@ import CustomService from '../service/customService';
 
 class CustomController {
   createCustom = async (req: Request, res: Response): Promise<Response> => {
-    const { productIds } = req.body;
+    const { productIds, address, city } = req.body;
     const user = req.user;
 
     if (!user) {
@@ -16,6 +16,8 @@ class CustomController {
       const custom = await CustomService.createCustomProduct({
         userId,
         productIds,
+        address,
+        city,
       });
 
       return res.status(200).json(custom);

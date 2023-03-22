@@ -34,6 +34,8 @@ CREATE TABLE custom (
   id SERIAL PRIMARY KEY,
   datetime TIMESTAMP NOT NULL DEFAULT NOW(),
   totalPrice INT NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  city VARCHAR(255) NOT NULL,
 
   user_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES "user"(id)
