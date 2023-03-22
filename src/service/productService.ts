@@ -27,7 +27,9 @@ class ProductService {
       if (brand) {
         const brands = Array.isArray(brand) ? brand : [brand];
         filters.push(
-          `b.name IN (${brands.map((_, i) => `$${orderNumber += 1}`).join(', ')})`
+          `b.name IN (${brands
+            .map((_, i) => `$${(orderNumber += 1)}`)
+            .join(', ')})`
         );
         values.push(...brands);
       }
@@ -35,7 +37,9 @@ class ProductService {
       if (category) {
         const categories = Array.isArray(category) ? category : [category];
         filters.push(
-          `c.name IN (${categories.map((_, i) => `$${orderNumber += 1}`).join(', ')})`
+          `c.name IN (${categories
+            .map((_, i) => `$${(orderNumber += 1)}`)
+            .join(', ')})`
         );
         values.push(...categories);
       }
@@ -128,7 +132,7 @@ class ProductService {
       const categoryId = await categoryService.findCategoryIdByName(category);
       const result = await query<Product>(
         'INSERT INTO product (title, images, rating, price, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, title, images, rating, price, brand_id, category_id',
-        [title, images, rating, price, brandId, categoryId]
+        [title, JSON.stringify(images), rating, price, brandId, categoryId]
       );
       const row = result.rows[0];
 
