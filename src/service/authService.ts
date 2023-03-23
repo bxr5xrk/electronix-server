@@ -52,8 +52,15 @@ class AuthService {
       [name, email, hashedPassword, 'client']
     );
 
+    const newUser = await query<User>('SELECT * FROM "user" WHERE email = $1', [
+      email,
+    ]);
+
     // Generate a JSON Web Token (JWT) with the user ID and role
-    const token = sign({ email, role: 'client' }, config.JWT_SECRET);
+    const token = sign(
+      { id: newUser.rows[0].id, email, role: 'client' },
+      config.JWT_SECRET
+    );
 
     // Return the JWT, along with the user's name, email, and role
     return { token, name, email, role: 'client' };
