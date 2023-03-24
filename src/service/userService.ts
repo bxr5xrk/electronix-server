@@ -21,7 +21,7 @@ class UserService {
 
   getUsers = async (): Promise<User[]> => {
     const queryResult = await query<User>(
-      'SELECT id, name, email, role FROM "user"'
+      'SELECT id, name, email, role FROM "user" where role != \'admin\''
     );
     return queryResult.rows;
   };
