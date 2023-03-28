@@ -47,7 +47,10 @@ class ProductController {
   };
 
   createProduct = async (req: Request, res: Response) => {
+    const userId = req.user?.id || 1;
+
     const { title, images, rating, price, brandName, categoryName } = req.body;
+
     try {
       const newProduct = await ProductService.createProduct(
         title,
@@ -55,7 +58,8 @@ class ProductController {
         rating,
         price,
         brandName,
-        categoryName
+        categoryName,
+        userId
       );
       res.status(201).json(newProduct);
     } catch (err) {
@@ -91,8 +95,13 @@ class ProductController {
 
   deleteProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const userId = req.user?.id || 1;
+
     try {
-      const deletedProduct = await ProductService.deleteProduct(Number(id));
+      const deletedProduct = await ProductService.deleteProduct(
+        Number(id),
+        userId
+      );
       if (deletedProduct) {
         res.json(deletedProduct);
       } else {

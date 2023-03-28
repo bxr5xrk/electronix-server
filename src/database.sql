@@ -10,7 +10,7 @@ CREATE TABLE category (
 
 
 CREATE TABLE product (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   images JSON NOT NULL,
   rating DECIMAL(4,2) NOT NULL,
@@ -46,4 +46,14 @@ CREATE TABLE custom_product (
   product_id INT NOT NULL,
   FOREIGN KEY (custom_id) REFERENCES custom(id),
   FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+CREATE TABLE log (
+  id SERIAL PRIMARY KEY,
+  datetime TIMESTAMP NOT NULL DEFAULT NOW(),
+  action VARCHAR(50) NOT NULL,
+  product_name VARCHAR(255) NOT NULL,
+
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
