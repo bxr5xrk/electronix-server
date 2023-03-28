@@ -2,6 +2,8 @@ import { query } from '../db';
 import { Product } from '../db/models/product';
 import brandService from './brandService';
 import categoryService from './categoryService';
+import logService from './logService';
+import userService from './userService';
 
 interface Params {
   q?: string;
@@ -123,16 +125,22 @@ class ProductService {
     rating: number,
     price: number,
     brand: string,
-    category: string
+    category: string,
+    userId: number
   ): Promise<Product> => {
     try {
       const brandId = await brandService.findBrandIdByName(brand);
       const categoryId = await categoryService.findCategoryIdByName(category);
-      const result = await query<Product>(
+      const product = await query<Product>(
         'INSERT INTO product (title, images, rating, price, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, title, images, rating, price, brand_id, category_id',
         [title, JSON.stringify(images), rating, price, brandId, categoryId]
       );
-      const row = result.rows[0];
+
+      const user = await userService.getUserById(userId);
+
+      await logService.createLog('add', user.id, product.rows[0].title);
+
+      const row = product.rows[0];
 
       return {
         ...row,
@@ -163,12 +171,17 @@ class ProductService {
     return result.rows[0];
   };
 
-  deleteProduct = async (id: number): Promise<Product> => {
-    const result = await query<Product>(
+  deleteProduct = async (id: number, userId: number): Promise<Product> => {
+    const product = await query<Product>(
       'DELETE FROM product WHERE id = $1 RETURNING *',
       [id]
     );
-    return result.rows[0];
+
+    const user = await userService.getUserById(userId);
+
+    await logService.createLog('remove', user.id, product.rows[0].title);
+
+    return product.rows[0];
   };
 }
 
