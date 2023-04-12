@@ -36,6 +36,7 @@ CREATE TABLE custom (
   totalPrice INT NOT NULL,
   address VARCHAR(255) NOT NULL,
   city VARCHAR(255) NOT NULL,
+  status VARCHAR(255) NOT NULL,
 
   user_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES "user"(id)
