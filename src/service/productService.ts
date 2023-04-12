@@ -99,6 +99,17 @@ class ProductService {
     }
   };
 
+  getProductsByIds = async (
+    productIds: number[]
+  ): Promise<{ price: number; id: number }[]> => {
+    const productPrices = await query<{ price: number; id: number }>(
+      `SELECT price, id FROM product WHERE id = ANY($1)`,
+      [productIds]
+    );
+
+    return productPrices.rows;
+  };
+
   getProductById = async (productId: number): Promise<Product | null> => {
     try {
       const result = await query<Product>(

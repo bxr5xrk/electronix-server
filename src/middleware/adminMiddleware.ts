@@ -6,7 +6,6 @@ export const adminMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  // Use the authMiddleware to extract the user payload from the JWT token
   authMiddleware(req, res, () => {
     const user = req.user;
 
@@ -14,7 +13,6 @@ export const adminMiddleware = (
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Check if the user has the 'admin' role
     if (user.role !== 'admin') {
       return res.status(403).json({ error: 'Forbidden' });
     }

@@ -1,6 +1,7 @@
 import { query } from '../db';
 import { Custom, Custom_Product } from '../db/models/custom';
 import { calculateTotalPrice } from '../utils';
+import productService from './productService';
 
 class CustomService {
   createCustomProduct = async ({
@@ -14,7 +15,7 @@ class CustomService {
     address: string;
     city: string;
   }): Promise<Custom> => {
-    const pricesWithIds = await this.getProductsByIds(productIds);
+    const pricesWithIds = await productService.getProductsByIds(productIds);
 
     const totalPrice = calculateTotalPrice(pricesWithIds, productIds);
 
@@ -49,17 +50,6 @@ class CustomService {
     );
 
     return custom.rows[0];
-  };
-
-  getProductsByIds = async (
-    productIds: number[]
-  ): Promise<{ price: number; id: number }[]> => {
-    const productPrices = await query<{ price: number; id: number }>(
-      `SELECT price, id FROM product WHERE id = ANY($1)`,
-      [productIds]
-    );
-
-    return productPrices.rows;
   };
 
   addCustomProduct = async (customProduct: Custom_Product): Promise<void> => {
