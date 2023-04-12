@@ -1,3 +1,4 @@
+import { Status } from './../db/models/custom.d';
 import { query } from '../db';
 import { Custom, Custom_Product } from '../db/models/custom';
 import { calculateTotalPrice } from '../utils';
@@ -45,8 +46,17 @@ class CustomService {
     city: string;
   }): Promise<Custom> => {
     const custom = await query<Custom>(
-      'INSERT INTO custom (user_id, totalPrice, address, city) VALUES ($1, $2, $3, $4) RETURNING *',
-      [userId, totalPrice, address, city]
+      'INSERT INTO custom (user_id, totalPrice, address, city, status) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [userId, totalPrice, address, city, 'processing']
+    );
+
+    return custom.rows[0];
+  };
+
+  updateCustomStatus = async (customId: number, status: Status) => {
+    const custom = await query<Custom>(
+      'UPDATE custom SET status = $1 WHERE id = $2 RETURNING *',
+      [status, customId]
     );
 
     return custom.rows[0];
@@ -67,6 +77,7 @@ class CustomService {
     custom.totalPrice,
     custom.address,
     custom.city,
+    custom.status,
     JSON_AGG(
       JSON_BUILD_OBJECT(
         'id', product.id,

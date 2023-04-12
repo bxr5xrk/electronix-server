@@ -48,6 +48,20 @@ class CustomController {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+
+  updateCustomStatus = async (req: Request, res: Response) => {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    try {
+      const custom = await CustomService.updateCustomStatus(Number(id), status);
+
+      return res.status(200).json(custom);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
 }
 
 export default new CustomController();
